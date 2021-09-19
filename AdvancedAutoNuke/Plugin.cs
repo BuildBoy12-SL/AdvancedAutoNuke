@@ -1,0 +1,43 @@
+﻿// -----------------------------------------------------------------------
+// <copyright file="Plugin.cs" company="Build">
+// Copyright (c) Build. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace AdvancedAutoNuke
+{
+    using System;
+    using Exiled.API.Features;
+
+    /// <summary>
+    /// The main plugin class.
+    /// </summary>
+    public class Plugin : Plugin<Config>
+    {
+        private EventHandlers eventHandlers;
+
+        /// <inheritdoc />
+        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 0);
+
+        /// <inheritdoc />
+        public override void OnEnabled()
+        {
+            eventHandlers = new EventHandlers(this);
+            Exiled.Events.Handlers.Server.RoundStarted += eventHandlers.OnRoundStarted;
+            Exiled.Events.Handlers.Server.RoundEnded += eventHandlers.OnRoundEnded;
+            Exiled.Events.Handlers.Server.RestartingRound += eventHandlers.OnRestartingRound;
+            base.OnEnabled();
+        }
+
+        /// <inheritdoc />
+        public override void OnDisabled()
+        {
+            Exiled.Events.Handlers.Server.RoundStarted -= eventHandlers.OnRoundStarted;
+            Exiled.Events.Handlers.Server.RoundEnded -= eventHandlers.OnRoundEnded;
+            Exiled.Events.Handlers.Server.RestartingRound -= eventHandlers.OnRestartingRound;
+            eventHandlers = null;
+            base.OnDisabled();
+        }
+    }
+}
