@@ -18,7 +18,7 @@ namespace AdvancedAutoNuke
     public class EventHandlers
     {
         private readonly Plugin plugin;
-        private CoroutineHandle coroutineHandles;
+        private CoroutineHandle nukeCoroutine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventHandlers"/> class.
@@ -30,19 +30,22 @@ namespace AdvancedAutoNuke
         public void OnRoundStarted()
         {
             Warhead.IsLocked = false;
-            coroutineHandles = Timing.RunCoroutine(NukeCoroutine());
+            nukeCoroutine = Timing.RunCoroutine(NukeCoroutine(), Segment.FixedUpdate);
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnRoundEnded(RoundEndedEventArgs)"/>
-        public void OnRoundEnded(RoundEndedEventArgs ev)
-        {
-            Timing.KillCoroutines(coroutineHandles);
-        }
+        public void OnRoundEnded(RoundEndedEventArgs ev) => KillCoroutine();
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnRestartingRound"/>
-        public void OnRestartingRound()
+        public void OnRestartingRound() => KillCoroutine();
+
+        /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnWaitingForPlayers"/>
+        public void OnWaitingForPlayers() => KillCoroutine();
+
+        private void KillCoroutine()
         {
-            Timing.KillCoroutines(coroutineHandles);
+            if (nukeCoroutine.IsRunning)
+                Timing.KillCoroutines(nukeCoroutine);
         }
 
         private IEnumerator<float> NukeCoroutine()

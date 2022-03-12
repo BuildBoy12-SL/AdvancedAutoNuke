@@ -21,7 +21,7 @@ namespace AdvancedAutoNuke
         /// Gets or sets the time, in seconds, until the pre-announcements play.
         /// </summary>
         [Description("The time, in seconds, until the pre-announcements play.")]
-        public int Time { get; set; } = 1200;
+        public float Time { get; set; } = 1200f;
 
         /// <summary>
         /// Gets or sets the broadcast to display on the pre-announcement stage.
@@ -39,7 +39,7 @@ namespace AdvancedAutoNuke
         /// Gets or sets the time, in seconds, after the pre-announcements play that the warhead starts.
         /// </summary>
         [Description("The time, in seconds, after the pre-announcements play that the warhead starts.")]
-        public int IntervalTime { get; set; } = 30;
+        public float IntervalTime { get; set; } = 30f;
 
         /// <summary>
         /// Gets or sets a value indicating whether the auto nuke should be locked while counting down.

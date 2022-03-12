@@ -9,6 +9,7 @@ namespace AdvancedAutoNuke
 {
     using System;
     using Exiled.API.Features;
+    using ServerHandlers = Exiled.Events.Handlers.Server;
 
     /// <summary>
     /// The main plugin class.
@@ -18,24 +19,29 @@ namespace AdvancedAutoNuke
         private EventHandlers eventHandlers;
 
         /// <inheritdoc />
-        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 0);
+        public override string Author => "Build";
+
+        /// <inheritdoc />
+        public override Version RequiredExiledVersion { get; } = new Version(5, 0, 0);
 
         /// <inheritdoc />
         public override void OnEnabled()
         {
             eventHandlers = new EventHandlers(this);
-            Exiled.Events.Handlers.Server.RoundStarted += eventHandlers.OnRoundStarted;
-            Exiled.Events.Handlers.Server.RoundEnded += eventHandlers.OnRoundEnded;
-            Exiled.Events.Handlers.Server.RestartingRound += eventHandlers.OnRestartingRound;
+            ServerHandlers.RoundStarted += eventHandlers.OnRoundStarted;
+            ServerHandlers.RoundEnded += eventHandlers.OnRoundEnded;
+            ServerHandlers.RestartingRound += eventHandlers.OnRestartingRound;
+            ServerHandlers.WaitingForPlayers += eventHandlers.OnWaitingForPlayers;
             base.OnEnabled();
         }
 
         /// <inheritdoc />
         public override void OnDisabled()
         {
-            Exiled.Events.Handlers.Server.RoundStarted -= eventHandlers.OnRoundStarted;
-            Exiled.Events.Handlers.Server.RoundEnded -= eventHandlers.OnRoundEnded;
-            Exiled.Events.Handlers.Server.RestartingRound -= eventHandlers.OnRestartingRound;
+            ServerHandlers.RoundStarted -= eventHandlers.OnRoundStarted;
+            ServerHandlers.RoundEnded -= eventHandlers.OnRoundEnded;
+            ServerHandlers.RestartingRound -= eventHandlers.OnRestartingRound;
+            ServerHandlers.WaitingForPlayers -= eventHandlers.OnWaitingForPlayers;
             eventHandlers = null;
             base.OnDisabled();
         }
